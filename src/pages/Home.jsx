@@ -1,9 +1,15 @@
+import Carousel from "../components/Carousel";
 import Header from "../components/Header";
 
 const Home = () => {
     return (
         <div className="container-fruit">
-            <Header/>
+            <div className="fixed-top">
+                <Header />
+            </div>
+            <div className="container" style={{paddingTop: "130px"}}>
+                <Carousel />
+            </div>
         </div>
     )
 }
