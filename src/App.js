@@ -1,12 +1,12 @@
 import './App.css';
 import { BrowserRouter as Router} from 'react-router-dom';
-import ProductDetails from './pages/ProductDetails';
+import Cart from './pages/Cart';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <ProductDetails />
+        <Cart />
       </div>
     </Router>
   );
