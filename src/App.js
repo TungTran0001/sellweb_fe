@@ -1,12 +1,12 @@
 import './App.css';
-import Home from './pages/Home';
 import { BrowserRouter as Router} from 'react-router-dom';
+import ProductDetails from './pages/ProductDetails';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Home/>
+        <ProductDetails />
       </div>
     </Router>
   );
