@@ -1,12 +1,12 @@
 import './App.css';
 import { BrowserRouter as Router} from 'react-router-dom';
-import Cart from './pages/Cart';
+import Profile from './pages/Profile';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Cart />
+        <Profile />
       </div>
     </Router>
   );
