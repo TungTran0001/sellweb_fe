@@ -1,12 +1,12 @@
 import './App.css';
 import { BrowserRouter as Router} from 'react-router-dom';
-import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Login />
+        <Register/>
       </div>
     </Router>
   );
