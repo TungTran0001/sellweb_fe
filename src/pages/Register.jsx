@@ -1,38 +1,68 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { json, Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Register = () => {
-    const initialValues = {email: "", password: "", confirmPassword: ""}
+    const initialValues = {userName: "", email: "", password: ""}
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({ ...formValues, [name]: value});
-    }
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
+    
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const errors = validate(formValues);
+        setFormErrors(errors);
+        if (Object.keys(errors).length === 0) {
+            // Proceed with form submission if no errors
+            setIsSubmitting(true);
+            try {
+                const response = await fetch("http://localhost:3001/api/v1/auth/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formValues),
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || "Registration failed");
+                }
+                const data = await response.json();
+                Cookies.set("token", data.token, { expires: 7 });
+                navigate("/home");
+            } catch (error) {
+                console.error("Error during registration:", error);
+                setFormErrors({ apiError: "An error occurred. Please try again." });
+            } finally {
+                setIsSubmitting(false);
+            }
+        }
+        else {
+            console.log("Form has errors", errors);
+        }
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setFormErrors(validate(formValues));
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormValues({ ...formValues, [name]: value });
     }
 
     const validate = (values) => {
-        const errors = {}
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if(!values.email) {
-            errors.email = "Email is required!";
-        } else if(!regex.test(values.email)) {
-            errors.email = "Email is not in correct format!";
+        const errors = {};
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+        if (!values.userName) {
+            errors.useName = "Username is required";
         }
-        if(!values.password) {
-            errors.password = "Password is required!";
-        } else if(values.password.length < 6) {
-            errors.password = "Password must be 6 characters or more!";
+        if (!values.email) {
+            errors.email = "Email is required";
+        } else if (!emailRegex.test(values.email)) {
+            errors.email = "Invalid email format";
         }
-        if(!values.confirmPassword) {
-            errors.confirmPassword = "Confirm password is required!";
-        }
-        else if(values.password !== values.confirmPassword) {
-            errors.confirmPassword = "Password does not match!";
+        if (!values.password) {
+            errors.password = "Password is required";
+        } else if (values.password.length < 6) {
+            errors.password = "Password must be at least 6 characters";
         }
         return errors;
     }
@@ -42,19 +72,19 @@ const Register = () => {
             <div className="mx-auto p-5 bg-white rounded-4 shadow-lg">
                 <h2 className="fs-2 fw-semibold mb-4 text-center">Sign up</h2>
                 <form onSubmit={handleSubmit} method="POST">
-                    <div>
-                        <input type="text" id="email" name="email" value={formValues.email} onChange={handleChange} placeholder="Email" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
+                    <div className="mb-3">
+                        <input type="text" name="userName" value={formValues.userName} onChange={handleChange} placeholder="Enter name" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
+                    </div>
+                    <p className="text-sm-start text-danger">{ formErrors.useName }</p>
+                    <div className="mb-3">
+                        <input type="text" name="email" value={formValues.email} onChange={handleChange} placeholder="Enter email" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
                     </div>
                     <p className="text-sm-start text-danger">{ formErrors.email }</p>
-                    <div className="mt-3">
-                        <input type="password" id="password" name="password" value={formValues.password} onChange={handleChange} placeholder="Create password" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
+                    <div className="mb-3">
+                        <input type="password" name="password" value={formValues.password} onChange={handleChange} placeholder="Enter password" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
                     </div>
                     <p className="text-sm-start text-danger">{ formErrors.password }</p>
-                    <div className="mt-3">
-                        <input type="password" id="confirmPassword" name="confirmPassword" value={formValues.confirmPassword} onChange={handleChange} placeholder="Confirm password" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
-                    </div>
-                    <p className="text-sm-start text-danger">{ formErrors.confirmPassword }</p>
-                    <button type="submit" className="w-100 bg-primary text-white py-2 rounded-2 border-0">Sign up</button>
+                    <button type="submit" className="w-100 bg-primary text-white py-2 rounded-2 border-0" disabled={isSubmitting}>{ isSubmitting ? "Submitting" : "Sign up" }</button>
                 </form>
                 <p className="mt-4 text-center">Already have an account? <Link to="/login">Login</Link></p>
             </div>
