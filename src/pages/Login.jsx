@@ -1,18 +1,48 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Login = () => {
     const initialValues = {email: "", password: ""}
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
         setFormValues({ ...formValues, [name]: value});
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setFormErrors(validate(formValues));
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const errors = validate(formValues);
+        setFormErrors(errors);
+        // Proceed only if there are no validate errors
+        if (Object.keys(errors).length === 0) {
+            setIsSubmitting(true);
+            try {
+                const response = await fetch("http://localhost:3001/api/v1/auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formValues),
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || "Login failed");
+                }
+                const data = await response.json();
+                Cookies.set("token", data.token, { expires: 7 });
+                navigate("/");
+            } catch (error) {
+                console.error("Error during login:", error);
+                setFormErrors({ apiError: "Invalid email or password" });
+            } finally {
+                setIsSubmitting(false);
+            }
+        }
     }
 
     const validate = (values) => {
@@ -37,15 +67,15 @@ const Login = () => {
                 <h2 className="fs-2 fw-semibold mb-4 text-center">Login</h2>
                 <form onSubmit={handleSubmit} method="POST">
                     <div>
-                        <input type="text" id="email" name="email" value={formValues.email} onChange={handleChange} placeholder="Email" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
+                        <input type="text" name="email" value={formValues.email} onChange={handleChange} placeholder="Email" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
                     </div>
                     <p className="text-sm-start text-danger">{ formErrors.email }</p>
                     <div className="mt-3">
-                        <input type="password" id="password" name="password" value={formValues.password} onChange={handleChange} placeholder="Password" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
+                        <input type="password" name="password" value={formValues.password} onChange={handleChange} placeholder="Password" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
                     </div>
                     <p className="text-sm-start text-danger">{ formErrors.password }</p>
                     <p className="mt-3"><Link to="/forgot-password">Forgot password?</Link></p>
-                    <button type="submit" className="w-100 bg-primary text-white py-2 rounded-2 border-0">Login</button>
+                    <button type="submit" className="w-100 bg-primary text-white py-2 rounded-2 border-0" disabled={isSubmitting}>{ isSubmitting ? "Submitting" : "Login" }</button>
                 </form>
                 <p className="mt-4 text-center">Don't have an account? <Link to="/register">Sign up</Link></p>
             </div>
