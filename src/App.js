@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-do
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={ <ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/register" element={isAuthenticated ? <Navigate to="/"/> : <Register />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to="/"/> : <Login />} />
+          <Route path='/forgot-password' element={<ForgotPassword/>} />
         </Routes>
       </div>
     </Router>
