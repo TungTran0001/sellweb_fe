@@ -7,6 +7,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import ProtectedRoute from './components/ProtectedRoute';
+import ResetPassword from './pages/ResetPassword';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/register" element={isAuthenticated ? <Navigate to="/"/> : <Register />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to="/"/> : <Login />} />
           <Route path='/forgot-password' element={<ForgotPassword/>} />
+          <Route path='/reset-password/:token' element={<ResetPassword/>} />
         </Routes>
       </div>
     </Router>

@@ -80,7 +80,7 @@ const Login = () => {
                 <p className="mt-4 text-center">Don't have an account? <Link to="/register">Sign up</Link></p>
             </div>
         </div>
-    )
+    );
 }
 
 export default Login;

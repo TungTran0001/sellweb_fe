@@ -30,7 +30,7 @@ const Register = () => {
                 }
                 const data = await response.json();
                 Cookies.set("token", data.token, { expires: 7 });
-                navigate("/home");
+                navigate("/");
             } catch (error) {
                 console.error("Error during registration:", error);
                 setFormErrors({ apiError: "An error occurred. Please try again." });
