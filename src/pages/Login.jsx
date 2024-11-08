@@ -34,7 +34,9 @@ const Login = () => {
                     throw new Error(errorText || "Login failed");
                 }
                 const data = await response.json();
-                Cookies.set("token", data.token, { expires: 7 });
+                // Store access and refresh tokens separately
+                Cookies.set("accessToken", data.accessToken, { expires: 0.04 }); // ~1 hour in days
+                Cookies.set("refreshToken", data.refreshToken, { expires: 7 }); // 7 days or as needed
                 navigate("/");
             } catch (error) {
                 console.error("Error during login:", error);

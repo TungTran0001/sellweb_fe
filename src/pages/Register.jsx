@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { json, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const Register = () => {
@@ -29,7 +29,8 @@ const Register = () => {
                     throw new Error(errorText || "Registration failed");
                 }
                 const data = await response.json();
-                Cookies.set("token", data.token, { expires: 7 });
+                Cookies.set("accessToken", data.accessToken, { expires: 0.04 }); // ~1 hour in days
+                Cookies.set("refreshToken", data.refreshToken, { expires: 7 }); // 7 days or as needed
                 navigate("/");
             } catch (error) {
                 console.error("Error during registration:", error);

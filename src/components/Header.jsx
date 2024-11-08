@@ -1,8 +1,33 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiQuestionMark } from "react-icons/ri";
 import { FiShoppingCart } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export const HeaderTop = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            // Gọi API logout để xóa token phía server
+            const response = await fetch("http://localhost:3001/api/v1/auth/logout", {
+                method: "POST",
+                credentials: "include" // Để đảm bảo refreshToken có thể được gửi trong cookie
+            });
+            if (response.ok) {
+                // Xóa bất kỳ trạng thái liên quan ở phía client (nếu cần)
+                Cookies.remove("accessToken");
+                Cookies.remove("refreshToken");
+                // Điều hướng người dùng về trang đăng nhập
+                navigate("/login");
+            } else {
+                console.error("Logout failed");
+            }
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    }
+
     return (
         <div className="row mb-3 py-2">
             <div className="col d-flex justify-content-start">
@@ -50,7 +75,7 @@ export const HeaderTop = () => {
                     <ul className="dropdown-menu">
                         <li className="dropdown-item">Tài khoản của tôi</li>
                         <li className="dropdown-item">Đơn mua</li>
-                        <li className="dropdown-item">Đăng xuất</li>
+                        <li className="dropdown-item" onClick={handleLogout} style={{ cursor: "pointer"}}>Đăng xuất</li>
                     </ul>
                 </div>
             </div>
