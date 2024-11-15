@@ -46,14 +46,6 @@ export const HeaderTop = () => {
                             <h6>Cảnh báo đăng nhập</h6>
                             <p>Tài khoản của bạn vừa được phát hiện đăng nhập ở thiết bị dektop</p>
                         </li>
-                        <li className="dropdown-item">
-                            <h6>Cảnh báo đăng nhập</h6>
-                            <p>Tài khoản của bạn vừa được phát hiện đăng nhập ở thiết bị dektop</p>
-                        </li>
-                        <li className="dropdown-item">
-                            <h6>Cảnh báo đăng nhập</h6>
-                            <p>Tài khoản của bạn vừa được phát hiện đăng nhập ở thiết bị dektop</p>
-                        </li>
                     </ul>
                 </div>
                 <a href="/#" className="text-light mx-2 link-underline-primary">
@@ -98,7 +90,7 @@ const Header = () => {
                         <div>
                             <form action="" className="py-1 ps-3 bg-light d-flex rounded-1">
                                 <input className="w-100" placeholder="Tìm kiếm sản phẩm" type="text" name="keyword" />
-                                <button className="mx-1 btn btn-primary rounded-1" type="submit">search</button>
+                                <button className="mx-1 btn btn-primary rounded-1" type="submit">Search</button>
                             </form>
                         </div>
                     </div>

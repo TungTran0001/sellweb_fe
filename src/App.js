@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const checkAuthStatus = () => {
       const token = Cookies.get('accessToken');
-      setIsAuthenticated(!!token);
+      setIsAuthenticated(token);
     };
     // Kiểm tra trạng thái xác thực khi component được render
     checkAuthStatus();
