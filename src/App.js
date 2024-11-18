@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import ProtectedRoute from './components/ProtectedRoute';
+import { refreshAccessToken } from './api/authService';
 
 
 function App() {
@@ -15,14 +16,25 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuthStatus = () => {
-      const token = Cookies.get('accessToken');
-      setIsAuthenticated(token);
+    const checkAuthStatus = async () => {
+      const accessToken = Cookies.get('accessToken');
+      if (!accessToken) {
+        // Nếu không có accessToken, thử làm mới nó
+        const newAccessToken = await refreshAccessToken();
+        if (!newAccessToken) {
+          // Không thể làm mới token => Chuyển hướng người dùng đến trang đăng nhập
+          setIsAuthenticated(false);
+          return;
+        }
+        setIsAuthenticated(true); // Token mới đã được lấy
+      } else {
+        setIsAuthenticated(true); // Access token hợp lệ
+      }
     };
     // Kiểm tra trạng thái xác thực khi component được render
     checkAuthStatus();
     // Đăng ký sự kiện thay đổi cookie để cập nhật trạng thái đăng nhập khi token thay đổi
-    const intervalId = setInterval(checkAuthStatus, 1000) // kiểm tra mỗi giây
+    const intervalId = setInterval(checkAuthStatus, 60000) // kiểm tra 1 phút
     return () => clearInterval(intervalId); // xóa interval khi component bị unmount
   }, []);
 
