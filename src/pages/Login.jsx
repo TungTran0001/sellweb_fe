@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Login = () => {
     const initialValues = {email: "", password: ""}
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { setIsAuthenticated } = useContext(AuthContext);
+
     const navigate = useNavigate();
 
     const handleChange = (event) => {
@@ -37,7 +40,8 @@ const Login = () => {
                 // Store access and refresh tokens separately
                 Cookies.set("accessToken", data.accessToken, { expires: 0.04 }); // ~1 hour in days
                 Cookies.set("refreshToken", data.refreshToken, { expires: 7 }); // 7 days or as needed
-                navigate("/");
+                setIsAuthenticated(true); // Cập nhật trạng thái toàn cục
+                navigate("/"); // Chuyển hướng
             } catch (error) {
                 console.error("Error during login:", error);
                 setFormErrors({ apiError: "Invalid email or password" });
