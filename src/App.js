@@ -5,27 +5,54 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
-import { AuthContext } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 
-import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
-import { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import GuestRoute from './components/GuestRoute';
 
 function App() {
-  // check authentication status based on token
-  const { isAuthenticated } = useContext(AuthContext);
-
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={ <ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/register" element={isAuthenticated ? <Navigate to="/"/> : <Register />} />
-          <Route path="/login" element={isAuthenticated ? <Navigate to="/"/> : <Login />} />
-          <Route path='/forgot-password' element={<ForgotPassword/>} />
-          <Route path='/reset-password/:token' element={<ResetPassword/>} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Routes>
+            {/* Trang cần đăng nhập */}
+            <Route path="/" element={ 
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+              } 
+            />
+
+            {/* Trang dành cho khách */}
+            <Route path="/register" element={
+              <GuestRoute>
+                <Register />
+              </GuestRoute>
+              } 
+            />
+            <Route path="/login" element={
+              <GuestRoute>
+                <Login />
+              </GuestRoute>
+              } 
+            />
+            <Route path='/forgot-password' element={
+              <GuestRoute>
+                <ForgotPassword />
+              </GuestRoute>
+              } 
+            />
+            <Route path='/reset-password/:token' element={
+              <GuestRoute>
+                <ResetPassword />
+              </GuestRoute>
+              } 
+            />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
