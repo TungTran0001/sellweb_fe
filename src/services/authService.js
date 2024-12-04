@@ -1,5 +1,28 @@
 import Cookies from "js-cookie";
 
+export const loginUser = async (formValues) => {
+    try {
+        const response = await fetch(
+            "http://localhost:3001/api/v1/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formValues),
+            }
+        );
+        if (!response.ok) {
+            const errorText = await response.json();
+            throw new Error(errorText.message || "Login failed");
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const refreshAccessToken = async () => {
     try {
         const refreshToken = Cookies.get('refreshToken');

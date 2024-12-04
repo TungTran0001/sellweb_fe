@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { AuthContext } from "../contexts/AuthContext";
+import { loginUser } from "../services/authService";
 
 const Login = () => {
     const initialValues = {email: "", password: ""}
@@ -25,26 +26,14 @@ const Login = () => {
         if (Object.keys(errors).length === 0) {
             setIsSubmitting(true);
             try {
-                const response = await fetch("http://localhost:3001/api/v1/auth/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formValues),
-                });
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText || "Login failed");
-                }
-                const data = await response.json();
+                const data = await loginUser(formValues);
                 // Store access and refresh tokens separately
                 Cookies.set("accessToken", data.accessToken, { expires: 0.04 }); // ~1 hour in days
                 Cookies.set("refreshToken", data.refreshToken, { expires: 7 }); // 7 days or as needed
                 setIsAuthenticated(true); // Cập nhật trạng thái toàn cục
                 navigate("/"); // Chuyển hướng
             } catch (error) {
-                console.error("Error during login:", error);
-                setFormErrors({ apiError: "Invalid email or password" });
+                alert(error.message);
             } finally {
                 setIsSubmitting(false);
             }
@@ -71,6 +60,7 @@ const Login = () => {
         <div className="d-flex justify-content-center align-items-center min-vh-100">
             <div className="mx-auto p-5 bg-white rounded-4 shadow-lg">
                 <h2 className="fs-2 fw-semibold mb-4 text-center">Login</h2>
+                <p className="text-sm-start text-danger">{ formErrors.email }</p>
                 <form onSubmit={handleSubmit} method="POST">
                     <div>
                         <input type="text" name="email" value={formValues.email} onChange={handleChange} placeholder="Email" className="w-100 px-4 py-2 border rounded-2 focus-ring" />
