@@ -46,6 +46,28 @@ export const loginUser = async (formValues) => {
     }
 }
 
+export const logoutUser = async () => {
+    try {
+        const response = await fetch(
+            "http://localhost:3001/api/v1/auth/logout",
+            {
+                method: "POST",
+                credentials: "include", // Để gửi cookie chứa refreshToken
+            }
+        );
+        if (!response.ok) {
+            throw new Error("Logout failed on the server.");
+        }
+        // Xóa cookie chứa accessToken và refreshToken
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        return true; // Trả về trạng thái thành công
+    } catch (error) {
+        console.error("Error during logout:", error);
+        throw error; // Truyền lỗi lên để xử lý ở phía gọi hàm
+    }
+}
+
 export const refreshAccessToken = async () => {
     try {
         const refreshToken = Cookies.get('refreshToken');

@@ -1,30 +1,21 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiQuestionMark } from "react-icons/ri";
 import { FiShoppingCart } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { logoutUser } from "../services/authService";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 export const HeaderTop = () => {
-    const navigate = useNavigate();
+    const { setIsAuthenticated } = useContext(AuthContext);
 
     const handleLogout = async () => {
         try {
-            // Gọi API logout để xóa token phía server
-            const response = await fetch("http://localhost:3001/api/v1/auth/logout", {
-                method: "POST",
-                credentials: "include" // Để đảm bảo refreshToken có thể được gửi trong cookie
-            });
-            if (response.ok) {
-                // Xóa bất kỳ trạng thái liên quan ở phía client (nếu cần)
-                Cookies.remove("accessToken");
-                Cookies.remove("refreshToken");
-                // Điều hướng người dùng về trang đăng nhập
-                navigate("/login");
-            } else {
-                console.error("Logout failed");
-            }
+            // Gọi hàm logout từ authService
+            await logoutUser();
+            setIsAuthenticated(false);
         } catch (error) {
-            console.error("Logout failed:", error);
+            console.error("Logout failed:", error.message);
+            alert(error.message);
         }
     }
 
