@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { registerUser } from "../services/authService";
 
 const Register = () => {
     const initialValues = {userName: "", email: "", password: ""}
@@ -17,24 +18,12 @@ const Register = () => {
             // Proceed with form submission if no errors
             setIsSubmitting(true);
             try {
-                const response = await fetch("http://localhost:3001/api/v1/auth/register", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formValues),
-                });
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText || "Registration failed");
-                }
-                const data = await response.json();
+                const data = await registerUser(formValues);
                 Cookies.set("accessToken", data.accessToken, { expires: 0.04 }); // ~1 hour in days
                 Cookies.set("refreshToken", data.refreshToken, { expires: 7 }); // 7 days or as needed
                 navigate("/");
             } catch (error) {
-                console.error("Error during registration:", error);
-                setFormErrors({ apiError: "An error occurred. Please try again." });
+                alert(error);
             } finally {
                 setIsSubmitting(false);
             }
