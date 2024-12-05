@@ -42,6 +42,28 @@ export const AuthProvider = ({ children }) => {
 
         // Kiểm tra trạng thái xác thực khi component được mount
         checkAuthStatus();
+
+        // Làm mới accessToken mỗi 5 phút (300,000ms)
+        const intervalId = setInterval(
+            async () => {
+                try {
+                    const newAccessToken = await refreshAccessToken();
+                    if (newAccessToken) {
+                        console.log("Access token refreshed successfully!");
+                    } else {
+                        console.warn("Failed to refresh access token.");
+                        setIsAuthenticated(false); // Nếu không làm mới được, hủy xác thực
+                    }
+                } catch (error) {
+                    console.error("Error refreshing access token:", error);
+                    setIsAuthenticated(false);
+                }
+            },
+            300000 // 5 phút
+        );
+        // Dọn dẹp interval khi component bị unmount
+        return () => clearInterval(intervalId);
+
     }, []);
 
     return (
