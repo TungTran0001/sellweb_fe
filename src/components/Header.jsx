@@ -6,6 +6,7 @@ import { logoutUser } from "../services/authService";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { getNotifications } from "../services/notificationService";
+import { Link } from "react-router-dom";
 
 export const HeaderTop = () => {
     const { setIsAuthenticated } = useContext(AuthContext);
@@ -74,8 +75,12 @@ export const HeaderTop = () => {
                         <span className="">Tùng Trần</span>
                     </div>
                     <ul className="dropdown-menu">
-                        <li className="dropdown-item">Tài khoản của tôi</li>
-                        <li className="dropdown-item">Đơn mua</li>
+                        <Link to="/profile" className="link-light">
+                            <li className="dropdown-item">Tài khoản của tôi</li>
+                        </Link>
+                        <Link to="/purchase" className="link-light"> 
+                            <li className="dropdown-item">Đơn mua</li>
+                        </Link>
                         <li className="dropdown-item" onClick={handleLogout} style={{ cursor: "pointer"}}>Đăng xuất</li>
                     </ul>
                 </div>

@@ -6,6 +6,8 @@ import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Order from './pages/Order';
+import Profile from './pages/Profile';
+import Purchase from './pages/Purchase';
 import { AuthProvider } from './contexts/AuthContext';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -27,6 +29,18 @@ function App() {
             <Route path="/orders" element={ 
               <ProtectedRoute>
                 <Order />
+              </ProtectedRoute>
+              } 
+            />
+            <Route path="/profile" element={ 
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+              } 
+            />
+            <Route path="/purchase" element={ 
+              <ProtectedRoute>
+                <Purchase />
               </ProtectedRoute>
               } 
             />
