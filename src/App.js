@@ -5,6 +5,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
+import Order from './pages/Order';
 import { AuthProvider } from './contexts/AuthContext';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -20,6 +21,12 @@ function App() {
             <Route path="/" element={ 
               <ProtectedRoute>
                 <Home />
+              </ProtectedRoute>
+              } 
+            />
+            <Route path="/orders" element={ 
+              <ProtectedRoute>
+                <Order />
               </ProtectedRoute>
               } 
             />

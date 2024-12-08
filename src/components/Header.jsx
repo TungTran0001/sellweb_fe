@@ -1,12 +1,31 @@
+import NotificationLink from "./notifications/NotificationLink";
+
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { RiQuestionMark } from "react-icons/ri";
 import { FiShoppingCart } from "react-icons/fi";
 import { logoutUser } from "../services/authService";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { getNotifications } from "../services/notificationService";
 
 export const HeaderTop = () => {
     const { setIsAuthenticated } = useContext(AuthContext);
+    const [notifications, setNotifications] = useState([]); // Trạng thái lưu danh sách thông báo
+
+    // Lấy danh sách thông báo khi component được render
+    useEffect(
+        () => {
+            const fetchNotifications = async () => {
+                try {
+                    const response = await getNotifications(); // Gọi API để lấy thông báo
+                    setNotifications(response.data);
+                } catch (error) {
+                    console.error("Failed to fetch notifications:", error.message);
+                }
+            }
+            fetchNotifications();
+        },
+        [] // [] đảm bảo chỉ gọi 1 lần khi component được render
+    );
 
     const handleLogout = async () => {
         try {
@@ -33,16 +52,15 @@ export const HeaderTop = () => {
                         <span>Thông báo</span>
                     </a>
                     <ul className="dropdown-menu">
-                        <li className="dropdown-item">
-                            <h6>Cảnh báo đăng nhập</h6>
-                            <p>Tài khoản của bạn vừa được phát hiện đăng nhập ở thiết bị dektop</p>
-                        </li>
+                        {notifications.length > 0 ? notifications.map(
+                            (notification, index) => (
+                                <NotificationLink key={index} notification={notification} />
+                            )
+                        ) : (
+                            <li>Không có thông báo</li>
+                        )}
                     </ul>
                 </div>
-                <a href="/#" className="text-light mx-2 link-underline-primary">
-                    <RiQuestionMark />
-                    <span>Hỗ trợ</span>
-                </a>
                 <div className="dropdown mx-2">
                     <span className="text-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Ngôn ngữ</span>
                     <ul className="dropdown-menu">

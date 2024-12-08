@@ -1,7 +1,7 @@
 import { HeaderTop } from "../components/Header";
 import Footer from "../components/Footer";
 
-const Cart = () => {
+const Order = () => {
     return (
         <div>
             <div className="shadow-lg">
@@ -59,4 +59,4 @@ const Cart = () => {
     )
 }
 
-export default Cart;
+export default Order;
