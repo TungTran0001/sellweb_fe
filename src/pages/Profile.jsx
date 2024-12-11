@@ -1,62 +1,90 @@
+import { useEffect, useState } from "react";
 import Header from "../components/Header"
 import Navbar from "../components/Navbar";
+import { getProfile } from "../services/profileService";
+import { formatDate } from "../utils/dateUtils";
 
 const Profile = () => {
+    const [profile, setProfile] = useState({});
+
+    useEffect(
+        () => {
+            const fetchProfile = async () => {
+                try {
+                    const response = await getProfile();
+                    console.log(response.profile[0]);
+                    setProfile(response.profile[0]);
+                } catch (error) {
+                    console.error("Failed to fetch profile:", error.message);
+                }
+            }
+            fetchProfile();
+        },
+        []
+    )
     return (
         <div>
+            {/* Header cố định */}
             <div className="fixed-top">
                 <Header />
             </div>
-            <div className="container d-flex" style={{paddingTop: "130px"}}>
-                <div className="col-4">
-                    <Navbar/>
-                </div>
-                <div className="col-8 p-4">
-                    <form action="">
-                        <div className="text-start">
-                            <h5>Hồ sơ của tôi</h5>
-                            <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+            <div className="container" style={{paddingTop: "130px"}}>
+                <div className="row">
+                    {/* Sidebar bên trái */}
+                    <div className="col-lg-4 mb-4">
+                        <Navbar/>
+                    </div>
+                    {/* Nội dung hồ sơ */}
+                    <div className="col-lg-8">
+                        <div className="card shadow-sm p-4">
+                            <h4 className="mb-3">Hồ sơ của tôi</h4>
+                            <p className="text-muted">Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+                            <form action="">
+                                {/* Tên */}
+                                <div className="mb-3">
+                                    <label className="form-label" htmlFor="">Tên</label>
+                                    <input className="form-control" type="text" value={profile.full_name} />
+                                </div>
+                                {/* Email */}
+                                <div className="mb-3">
+                                    <label htmlFor="" className="form-label">Email</label>
+                                    <input type="email" className="form-control" value={profile.email} />
+                                </div>
+                                {/* Số điện thoại */}
+                                <div className="mb-3">
+                                    <label htmlFor="" className="form-label">Số điện thoại</label>
+                                    <input type="text" className="form-control" value={profile.phone_number} />
+                                </div>
+                                {/* Giới tính */}
+                                <div className="mb-3">
+                                    <label htmlFor="">Giới tính</label>
+                                    <div>
+                                        <input type="radio" name="gender" value="male" checked={profile.gender === "male"} />
+                                        Nam
+                                        <input className="ms-4" type="radio" name="gender" value="male" checked={profile.gender === "female"} />
+                                        Nữ
+                                        <input className="ms-4" type="radio" name="gender" value="male" checked={profile.gender === "other"} />
+                                        Khác
+                                    </div>
+                                </div>
+                                {/* Ngày sinh */}
+                                <div className="mb-3">
+                                    <label htmlFor="" className="form-label">Ngày sinh</label>
+                                    <input className="form-control" type="date" value={formatDate(profile.date_of_birth)} />
+                                </div>
+                                {/* Địa chỉ */}
+                                <div className="mb-3">
+                                    <label className="form-label">Địa chỉ</label>
+                                    <input className="form-control" type="text" value={profile.address} />
+                                </div>
+                                {/* Nút hành động */}
+                                <div className="d-flex justify-content-between mt-4">
+                                    <button type="button" className="btn btn-secondary">Hủy</button>
+                                    <button type="submit" className="btn btn-primary" >Lưu</button>
+                                </div>
+                            </form>
                         </div>
-                        <div className="row mt-4">
-                            <div className="col-3">
-                                Tên
-                            </div>
-                            <input className="col-9" type="text" />
-                        </div>
-                        <div className="row mt-4">
-                            <div className="col-3">
-                                Số điện thoại
-                            </div>
-                            <input className="col-9" type="text" />
-                        </div>
-                        <div className="row mt-4">
-                            <div className="col-3">
-                                Giới tính
-                            </div>
-                            <div className="col-9 text-start">
-                                <input type="radio" value="Male" name="gender" /> Nam
-                                <input className="ms-3" type="radio" value="Female" name="gender" /> Nữ
-                                <input className="ms-3" type="radio" value="Other" name="gender" /> Other
-                            </div>
-                        </div>
-                        <div className="row mt-4">
-                            <div className="col-3">
-                                Ngày sinh
-                            </div>
-                            <p className="col-9 text-start">
-                                <input type="date" />
-                            </p>
-                        </div>
-                        <div className="row mt-4">
-                            <div className="col-3">
-                                Địa chỉ
-                            </div>
-                            <input className="col-9" type="text" />
-                        </div>
-                        <div>
-                            <button className="mt-4 btn btn-primary">Lưu</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
