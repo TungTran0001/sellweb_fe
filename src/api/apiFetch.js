@@ -13,7 +13,6 @@ export const apiFetch = async (url, options = {}) => {
                 headers: {
                     ...options.headers,
                     Authorization: `Bearer ${accessToken}`,
-                    "Content-Type": "application/json",
                 }
             }
         );
@@ -30,7 +29,6 @@ export const apiFetch = async (url, options = {}) => {
                     headers: {
                         ...options.headers,
                         Authorization: `Bearer ${accessToken}`,
-                        "Content-Type": "application/json",
                     },
                 });
             } catch (refreshError) {
