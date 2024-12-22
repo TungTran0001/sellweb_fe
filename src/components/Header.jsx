@@ -1,5 +1,4 @@
 import NotificationLink from "./notifications/NotificationLink";
-
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { logoutUser } from "../services/authService";
@@ -7,10 +6,12 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { getNotifications } from "../services/notificationService";
 import { Link } from "react-router-dom";
+import { getUserHeaderInfo } from "../services/userService";
 
 export const HeaderTop = () => {
     const { setIsAuthenticated } = useContext(AuthContext);
     const [notifications, setNotifications] = useState([]); // Trạng thái lưu danh sách thông báo
+    const [userInfo, setUserInfo] = useState({ avatar_url: '', displayName: '' });
 
     // Lấy danh sách thông báo khi component được render
     useEffect(
@@ -27,6 +28,21 @@ export const HeaderTop = () => {
         },
         [] // [] đảm bảo chỉ gọi 1 lần khi component được render
     );
+
+    useEffect(
+        () => {
+            const fetchHeaderInfo = async () => {
+                try {
+                    const data = await getUserHeaderInfo(); // Gọi API để lấy 
+                    setUserInfo(data);
+                } catch (error) {
+                    console.error("failed 2: ", error);
+                }
+            }
+            fetchHeaderInfo();
+        },
+        [] // [] đảm bảo chỉ gọi 1 lần khi component được render
+    )
 
     const handleLogout = async () => {
         try {
@@ -71,8 +87,8 @@ export const HeaderTop = () => {
                 </div>
                 <div className="dropdown mx-2">
                     <div className="text-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img style={{width: "20px", height: "20px", borderRadius: "50%"}} src="/slider1.jpg" alt="img" />
-                        <span className="">Tùng Trần</span>
+                        <img style={{width: "20px", height: "20px", borderRadius: "50%"}} src={`http://localhost:3001${userInfo.avatar_url}`} alt="Avatar" />
+                        <span className="">{userInfo.displayName}</span>
                     </div>
                     <ul className="dropdown-menu">
                         <Link to="/profile" className="link-light">
