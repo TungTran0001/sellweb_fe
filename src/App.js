@@ -12,6 +12,9 @@ import { AuthProvider } from './contexts/AuthContext';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import GuestRoute from './components/GuestRoute';
+import Address from './pages/users/Address';
+import ChangePassword from './pages/users/ChangePassword';
+import Notification from './pages/users/Notification';
 
 function App() {
   return (
@@ -38,9 +41,27 @@ function App() {
               </ProtectedRoute>
               } 
             />
+            <Route path="/user/account/address" element={ 
+              <ProtectedRoute>
+                <Address />
+              </ProtectedRoute>
+              } 
+            />
+            <Route path="/user/account/password" element={ 
+              <ProtectedRoute>
+                <ChangePassword />
+              </ProtectedRoute>
+              } 
+            />
             <Route path="/user/purchase" element={ 
               <ProtectedRoute>
                 <Purchase />
+              </ProtectedRoute>
+              } 
+            />
+            <Route path="/user/notifications/order" element={ 
+              <ProtectedRoute>
+                <Notification />
               </ProtectedRoute>
               } 
             />
