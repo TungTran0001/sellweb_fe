@@ -14,22 +14,22 @@ const Navbar = () => {
                         </span>
                         <ul className="dropdown-menu">
                             <li>
-                                <Link className="dropdown-item" to="/profile">Hồ sơ</Link>
+                                <Link className="dropdown-item" to="/user/account/profile">Hồ sơ</Link>
                             </li>
                             <li>
-                                <Link className="dropdown-item" to="/address">Địa chỉ</Link>
+                                <Link className="dropdown-item" to="/user/account//address">Địa chỉ</Link>
                             </li>
                             <li>
-                                <Link className="dropdown-item" to="/change-password">Đổi mật khẩu</Link>
+                                <Link className="dropdown-item" to="/user/account/password">Đổi mật khẩu</Link>
                             </li>
                         </ul>
                     </li>
                     {/* Thêm các menu khác */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="/purchase">Đơn mua</Link>
+                        <Link className="nav-link" to="/user/purchase">Đơn mua</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/notifications/order">Thông báo</Link>
+                        <Link className="nav-link" to="/user/notifications/order">Thông báo</Link>
                     </li>
                 </ul>
             </div>

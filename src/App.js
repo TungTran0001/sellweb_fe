@@ -32,13 +32,13 @@ function App() {
               </ProtectedRoute>
               } 
             />
-            <Route path="/profile" element={ 
+            <Route path="/user/account/profile" element={ 
               <ProtectedRoute>
                 <Profile />
               </ProtectedRoute>
               } 
             />
-            <Route path="/purchase" element={ 
+            <Route path="/user/purchase" element={ 
               <ProtectedRoute>
                 <Purchase />
               </ProtectedRoute>

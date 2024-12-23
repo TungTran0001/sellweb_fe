@@ -91,10 +91,10 @@ export const HeaderTop = () => {
                         <span className="">{userInfo.displayName}</span>
                     </div>
                     <ul className="dropdown-menu">
-                        <Link to="/profile" className="link-light">
+                        <Link to="/user/account/profile" className="link-light">
                             <li className="dropdown-item">Tài khoản của tôi</li>
                         </Link>
-                        <Link to="/purchase" className="link-light"> 
+                        <Link to="/user/purchase" className="link-light"> 
                             <li className="dropdown-item">Đơn mua</li>
                         </Link>
                         <li className="dropdown-item" onClick={handleLogout} style={{ cursor: "pointer"}}>Đăng xuất</li>
