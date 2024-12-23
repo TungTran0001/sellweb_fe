@@ -21,7 +21,7 @@ const Navbar = () => {
                                 <Link className={`dropdown-item ${location.pathname === "/user/account/profile" ? "active" : ""}`} to="/user/account/profile">Hồ sơ</Link>
                             </li>
                             <li>
-                                <Link className={`dropdown-item ${location.pathname === "/user/account//address" ? "active" : ""}`} to="/user/account//address">Địa chỉ</Link>
+                                <Link className={`dropdown-item ${location.pathname === "/user/account/address" ? "active" : ""}`} to="/user/account/address">Địa chỉ</Link>
                             </li>
                             <li>
                                 <Link className={`dropdown-item ${location.pathname === "/user/account/password" ? "active" : ""}`} to="/user/account/password">Đổi mật khẩu</Link>
