@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getProfile, updateProfile } from "../services/profileService";
-import { formatDate } from "../utils/dateUtils";
-import LayoutUser from "../components/Layouts/LayoutUser";
+import { getProfile, updateProfile } from "../../services/profileService";
+import { formatDate } from "../../utils/dateUtils";
+import LayoutUser from "../../components/Layouts/LayoutUser";
 
 const Profile = () => {
     const [profile, setProfile] = useState({});

@@ -6,8 +6,8 @@ import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Order from './pages/Order';
-import Profile from './pages/Profile';
-import Purchase from './pages/Purchase';
+import Profile from './pages/users/Profile';
+import Purchase from './pages/users/Purchase';
 import { AuthProvider } from './contexts/AuthContext';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';

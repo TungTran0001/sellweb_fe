@@ -1,9 +1,9 @@
-import LayoutUser from "../components/Layouts/LayoutUser";
+import LayoutUser from "../../components/Layouts/LayoutUser";
 
 const Purchase = () => {
     return (
         <LayoutUser>
-            hello
+            Đơn mua
         </LayoutUser>
     )
 }
