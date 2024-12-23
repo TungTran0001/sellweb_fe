@@ -1,6 +1,10 @@
+import LayoutUser from "../components/Layouts/LayoutUser";
+
 const Purchase = () => {
     return (
-        <div>Purchase</div>
+        <LayoutUser>
+            hello
+        </LayoutUser>
     )
 }
 
