@@ -1,5 +1,9 @@
-import { Link } from "react-router-dom";
+import './Navbar.css';
+
+import { Link, useLocation } from "react-router-dom";
 const Navbar = () => {
+    const location = useLocation(); // Lấy đường dẫn hiện tại
+
     return (
         <nav className="navbar bg-light p-4">
             <div className="container-fluid">
@@ -14,22 +18,22 @@ const Navbar = () => {
                         </span>
                         <ul className="dropdown-menu">
                             <li>
-                                <Link className="dropdown-item" to="/user/account/profile">Hồ sơ</Link>
+                                <Link className={`dropdown-item ${location.pathname === "/user/account/profile" ? "active" : ""}`} to="/user/account/profile">Hồ sơ</Link>
                             </li>
                             <li>
-                                <Link className="dropdown-item" to="/user/account//address">Địa chỉ</Link>
+                                <Link className={`dropdown-item ${location.pathname === "/user/account//address" ? "active" : ""}`} to="/user/account//address">Địa chỉ</Link>
                             </li>
                             <li>
-                                <Link className="dropdown-item" to="/user/account/password">Đổi mật khẩu</Link>
+                                <Link className={`dropdown-item ${location.pathname === "/user/account/password" ? "active" : ""}`} to="/user/account/password">Đổi mật khẩu</Link>
                             </li>
                         </ul>
                     </li>
                     {/* Thêm các menu khác */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="/user/purchase">Đơn mua</Link>
+                        <Link className={`nav-link ${location.pathname === "/user/purchase" ? "active" : ""}`} to="/user/purchase">Đơn mua</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/user/notifications/order">Thông báo</Link>
+                        <Link className={`nav-link ${location.pathname === "/user/notifications/order" ? "active" : ""}`} to="/user/notifications/order">Thông báo</Link>
                     </li>
                 </ul>
             </div>

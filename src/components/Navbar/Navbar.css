@@ -1,0 +1,4 @@
+.dropdown-item.active, .nav-link.active {
+    color: #007bff !important;            /* Màu chữ */
+    background-color: white !important;   /* Background */
+}
