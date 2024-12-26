@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 import LayoutUser from "../../components/Layouts/LayoutUser";
 
 const Address = () => {
@@ -20,6 +22,47 @@ const Address = () => {
     ]);
 
     const [showModal, setShowModal] = useState(false);
+    // State lưu trữ dữ liệu địa lý
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [wards, setWards] = useState([]);
+
+    // State lưu trữ giá trị được chọn
+    const [selectedProvince, setSelectedProvince] = useState();
+    const [selectedDistrict, setSelectedDistrict] = useState();
+    const [selectedWard, setSelectedWard] = useState();
+
+    // Lấy danh sách Tỉnh/Thành phố khi mở modal
+    useEffect(() => {
+        if (showModal) {
+            axios
+                .get("http://localhost:3001/api/v1/locations/provinces")
+                .then((response) => setProvinces(response.data))
+                .catch((error) => console.error("Error fetching provinces:", error));
+        }
+    }, [showModal]);
+
+    // Lấy danh sách Quận/Huyện khi chọn Tỉnh
+    useEffect(() => {
+        if (selectedProvince) {
+            axios.get(`http://localhost:3001/api/v1/locations/districts/${selectedProvince}`)
+            .then((response) => setDistricts(response.data))
+            .catch((error) => console.error("Error fetching districts:", error));
+        } else {
+            setDistricts([]);
+        }
+    }, [selectedProvince]);
+
+    // Lấy danh sách Phường/Xã khi chọn Quận
+    useEffect(() => {
+        if (selectedDistrict) {
+            axios.get(`http://localhost:3001/api/v1/locations/wards/${selectedDistrict}`)
+            .then((response) => setWards(response.data))
+            .catch((error) => console.error("Error fetching wards:", error));
+        } else {
+            setWards([]);
+        }
+    }, [selectedDistrict]);
 
     const toggleModal = () => {
         setShowModal(!showModal);
@@ -93,36 +136,57 @@ const Address = () => {
                                             </div>
                                         </div>
                                         <div className="mb-3">
-                                            <label htmlFor="address" className="form-label">
+                                            <label htmlFor="province" className="form-label">
                                                 Tỉnh/Thành phố
                                             </label>
-                                            <select className="form-select" id="address">
+                                            <select 
+                                                className="form-select" 
+                                                id="province"
+                                                value={selectedProvince}
+                                                onChange={(event) => setSelectedProvince(event.target.value) }
+                                            >
                                                 <option value="">Chọn Tỉnh/Thành phố</option>
-                                                <option value="1">Hà Nội</option>
-                                                <option value="2">Đà Nẵng</option>
-                                                <option value="3">Hồ Chí Minh</option>
+                                                {provinces.map((province) => (
+                                                    <option key={province.id} value={province.id}>
+                                                        {province.name}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="mb-3">
-                                            <label htmlFor="address" className="form-label">
+                                            <label htmlFor="district" className="form-label">
                                                 Quận/Huyện
                                             </label>
-                                            <select className="form-select" id="address">
+                                            <select 
+                                                className="form-select" 
+                                                id="district"
+                                                value={selectedDistrict}
+                                                onChange={(event) => setSelectedDistrict(event.target.value)}
+                                            >
                                                 <option value="">Chọn Quận/Huyện</option>
-                                                <option value="1">Hà Nội</option>
-                                                <option value="2">Đà Nẵng</option>
-                                                <option value="3">Hồ Chí Minh</option>
+                                                {districts.map((district) => (
+                                                    <option key={district.id} value={district.id}>
+                                                        {district.name}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="mb-3">
-                                            <label htmlFor="address" className="form-label">
+                                            <label htmlFor="ward" className="form-label">
                                                 Phường/Xã
                                             </label>
-                                            <select className="form-select" id="address">
+                                            <select 
+                                                className="form-select" 
+                                                id="ward"
+                                                value={selectedWard}
+                                                onChange={(event) => setSelectedWard(event.target.value)}
+                                            >
                                                 <option value="">Chọn Phường/Xã</option>
-                                                <option value="1">Hà Nội</option>
-                                                <option value="2">Đà Nẵng</option>
-                                                <option value="3">Hồ Chí Minh</option>
+                                                {wards.map((ward) => (
+                                                    <option key={ward.id} value={ward.id}>
+                                                        {ward.name}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="mb-3">
