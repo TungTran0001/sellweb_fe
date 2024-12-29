@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import LayoutUser from "../../components/Layouts/LayoutUser";
+import apiEndpoints from "../../config/apiRouters";
+import { createAddress } from "../../services/addressService";
 
 const Address = () => {
     const [addresses, setAddresses] = useState([
@@ -27,16 +29,20 @@ const Address = () => {
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
 
-    // State lưu trữ giá trị được chọn
-    const [selectedProvince, setSelectedProvince] = useState();
-    const [selectedDistrict, setSelectedDistrict] = useState();
-    const [selectedWard, setSelectedWard] = useState();
+    const [formData, setFormData] = useState({
+        name: "",
+        phone: "",
+        provinceId: "",
+        districtId: "",
+        wardId: "",
+        specificAddress: "",
+        isDefault: false,
+    });
 
     // Lấy danh sách Tỉnh/Thành phố khi mở modal
     useEffect(() => {
         if (showModal) {
-            axios
-                .get("http://localhost:3001/api/v1/locations/provinces")
+            axios.get(apiEndpoints.provinces)
                 .then((response) => setProvinces(response.data))
                 .catch((error) => console.error("Error fetching provinces:", error));
         }
@@ -44,29 +50,77 @@ const Address = () => {
 
     // Lấy danh sách Quận/Huyện khi chọn Tỉnh
     useEffect(() => {
-        if (selectedProvince) {
-            axios.get(`http://localhost:3001/api/v1/locations/districts/${selectedProvince}`)
+        if (formData.provinceId) {
+            axios.get(apiEndpoints.districts(formData.provinceId))
             .then((response) => setDistricts(response.data))
             .catch((error) => console.error("Error fetching districts:", error));
         } else {
             setDistricts([]);
         }
-    }, [selectedProvince]);
+    }, [formData.provinceId]);
 
     // Lấy danh sách Phường/Xã khi chọn Quận
     useEffect(() => {
-        if (selectedDistrict) {
-            axios.get(`http://localhost:3001/api/v1/locations/wards/${selectedDistrict}`)
+        if (formData.districtId) {
+            axios.get(apiEndpoints.wards(formData.districtId))
             .then((response) => setWards(response.data))
             .catch((error) => console.error("Error fetching wards:", error));
         } else {
             setWards([]);
         }
-    }, [selectedDistrict]);
+    }, [formData.districtId]);
 
     const toggleModal = () => {
         setShowModal(!showModal);
     }
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === "checkbox" ? checked : value,
+        });
+    };
+
+    // Gửi dữ liệu form
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // Gửi dữ liệu đến API
+            const data = await createAddress(formData);
+            const newAddress = data.newAddress[0];
+            // Thêm địa chỉ mới vào danh sách địa chỉ
+            setAddresses((prevAddresses) => [
+                ...prevAddresses,
+                {
+                    id: newAddress.id,
+                    name: newAddress.name,
+                    phone: newAddress.phone,
+                    address: `${newAddress.specific_address}, ${wards.find(w => w.id === parseInt(newAddress.ward_id))?.name},
+                                ${districts.find(d => d.id === parseInt(newAddress.district_id))?.name},
+                                ${provinces.find(p => p.id === parseInt(newAddress.province_id))?.name}`,
+                    isDefault: newAddress.is_default,
+                },
+            ]);
+
+            // Reset form
+            setFormData({
+                name: "",
+                phone: "",
+                provinceId: "",
+                districtId: "",
+                wardId: "",
+                specificAddress: "",
+                isDefault: false,
+            });
+
+            // Đóng modal
+            setShowModal(false);
+        } catch (error) {
+            console.error("failed to create address: ", error);
+            alert("Đã xảy ra lỗi khi thêm địa chỉ. Vui lòng thử lại!");
+        }
+    };
 
     return (
         <LayoutUser>
@@ -114,7 +168,7 @@ const Address = () => {
                                     <button className="btn-close" onClick={toggleModal}></button>
                                 </div>
                                 <div className="modal-body">
-                                    <form>
+                                    <form onSubmit={handleSubmit}>
                                         <div className="row mb-3">
                                             <div className="col">
                                                 <label htmlFor="name" className="form-label">Họ và tên</label>
@@ -122,7 +176,11 @@ const Address = () => {
                                                     type="text" 
                                                     className="form-control"
                                                     id="name"
+                                                    name="name"
+                                                    value={formData.name}
+                                                    onChange={handleChange}
                                                     placeholder="Họ và tên"
+                                                    required
                                                 />
                                             </div>
                                             <div className="col">
@@ -131,7 +189,11 @@ const Address = () => {
                                                     type="text"
                                                     className="form-control"
                                                     id="phone"
+                                                    name="phone"
+                                                    value={formData.phone}
+                                                    onChange={handleChange}
                                                     placeholder="Số điện thoại"
+                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -142,8 +204,10 @@ const Address = () => {
                                             <select 
                                                 className="form-select" 
                                                 id="province"
-                                                value={selectedProvince}
-                                                onChange={(event) => setSelectedProvince(event.target.value) }
+                                                name="provinceId"
+                                                value={formData.provinceId}
+                                                onChange={handleChange}
+                                                required
                                             >
                                                 <option value="">Chọn Tỉnh/Thành phố</option>
                                                 {provinces.map((province) => (
@@ -160,8 +224,10 @@ const Address = () => {
                                             <select 
                                                 className="form-select" 
                                                 id="district"
-                                                value={selectedDistrict}
-                                                onChange={(event) => setSelectedDistrict(event.target.value)}
+                                                name="districtId"
+                                                value={formData.districtId}
+                                                onChange={handleChange}
+                                                required
                                             >
                                                 <option value="">Chọn Quận/Huyện</option>
                                                 {districts.map((district) => (
@@ -178,8 +244,10 @@ const Address = () => {
                                             <select 
                                                 className="form-select" 
                                                 id="ward"
-                                                value={selectedWard}
-                                                onChange={(event) => setSelectedWard(event.target.value)}
+                                                name="wardId"
+                                                value={formData.wardId}
+                                                onChange={handleChange}
+                                                required
                                             >
                                                 <option value="">Chọn Phường/Xã</option>
                                                 {wards.map((ward) => (
@@ -194,24 +262,32 @@ const Address = () => {
                                             <input 
                                                 type="text"
                                                 className="form-control"
+                                                id="specificAddress"
+                                                name="specificAddress"
+                                                value={formData.specificAddress}
+                                                onChange={handleChange}
                                                 placeholder="Địa chỉ cụ thể"
+                                                required
                                             />
                                         </div>
                                         <div className="form-check">
                                             <input 
                                                 className="form-check-input"
                                                 type="checkbox"
-                                                id="defaultAddress" 
+                                                id="isDefault" 
+                                                name="isDefault"
+                                                checked={formData.isDefault}
+                                                onChange={handleChange}
                                             />
                                             <label className="form-check-label" htmlFor="defaultAddress">
                                                 Đặt làm địa chỉ mặc định
                                             </label>
                                         </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-secondary" onClick={toggleModal}>Trở lại</button>
+                                            <button type="submit" className="btn btn-danger">Hoàn thành</button>
+                                        </div>
                                     </form>
-                                </div>
-                                <div className="modal-footer">
-                                    <button className="btn btn-secondary" onClick={toggleModal}>Trở lại</button>
-                                    <button className="btn btn-danger">Hoàn thành</button>
                                 </div>
                             </div>
                         </div>
