@@ -22,3 +22,21 @@ export const createAddress = async (formData) => {
         throw error;
     }
 }
+
+export const getAddresses = async () => {
+    try {
+        const response = await apiFetch(
+            apiEndpoints.addresses,
+            {
+                method: "GET",
+            }
+        );
+        if (!response.ok) {
+            throw new Error("Error server: ", response.status);
+        }
+        return response.json();
+    } catch (error) {
+        console.error("Error fetch addresses: ", error);
+        throw error;
+    }
+}

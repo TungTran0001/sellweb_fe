@@ -3,25 +3,10 @@ import axios from "axios";
 
 import LayoutUser from "../../components/Layouts/LayoutUser";
 import apiEndpoints from "../../config/apiRouters";
-import { createAddress } from "../../services/addressService";
+import { createAddress, getAddresses } from "../../services/addressService";
 
 const Address = () => {
-    const [addresses, setAddresses] = useState([
-        {
-            id: 1,
-            name: "Trần Quốc Tùng",
-            phone: "(+84) 914 842 611",
-            address: "Tái Định Cư Kỳ Lợi, Xã Kỳ Lợi, Thị Xã Kỳ Anh, Hà Tĩnh",
-            isDefault: true,
-        },
-        {
-            id: 2,
-            name: "Trần Quốc Tùng",
-            phone: "(+84) 914 842 611",
-            address: "Trường ĐH CNTT Và Truyền Thông Việt Hàn VKU, 460 Trần Đại Nghĩa, Phường Hòa Quý, Quận Ngũ Hành Sơn, Đà Nẵng",
-            isDefault: false,
-        },
-    ]);
+    const [addresses, setAddresses] = useState([]);
 
     const [showModal, setShowModal] = useState(false);
     // State lưu trữ dữ liệu địa lý
@@ -38,6 +23,23 @@ const Address = () => {
         specificAddress: "",
         isDefault: false,
     });
+
+    // Lấy danh sách địa chỉ từ API
+    useEffect(
+        () => {
+            const fetchAddresses = async () => {
+                try {
+                    const response = await getAddresses();
+                    setAddresses(response.addresses);
+                } catch (error) {
+                    console.error("Failed to fetch addresses: ", error);
+                }
+            }
+            fetchAddresses();
+        },
+        []
+    );
+
 
     // Lấy danh sách Tỉnh/Thành phố khi mở modal
     useEffect(() => {
@@ -139,18 +141,18 @@ const Address = () => {
                             <h5 className="card-title mb-3">
                                 {address.name} <span className="text-muted">{address.phone}</span>
                             </h5>
-                            <p className="card-text mb-2">{address.address}</p>
-                            {address.isDefault && (
+                            <p className="card-text mb-2">{`${address.specific_address}, ${address.ward}, ${address.distric}, ${address.province}`}</p>
+                            {address.is_default && (
                                 <span className="badge bg-danger">Mặc định</span>
                             )}
                             <div className="d-flex justify-content-between align-items-center mt-3">
                                 <div>
                                     <button className="btn btn-link text-decoration-none">Cập nhập</button>
-                                    {!address.isDefault && (
+                                    {!address.is_default && (
                                         <button className="btn btn-link text-decoration-none text-danger">Xóa</button>
                                     )}
                                 </div>
-                                {!address.isDefault && (
+                                {!address.is_default && (
                                     <button className="btn btn-outline-secondary">Thiết lập mặc định</button>
                                 )}
                             </div>
