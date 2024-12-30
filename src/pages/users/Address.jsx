@@ -143,7 +143,7 @@ const Address = () => {
                                 {address.name} <span className="text-muted">{address.phone}</span>
                             </h5>
                             <p className="card-text mb-2">{`${address.specific_address}, ${address.ward}, ${address.district}, ${address.province}`}</p>
-                            {address.is_default && (
+                            {address.is_default === 1 && (
                                 <span className="badge bg-danger">Mặc định</span>
                             )}
                             <div className="d-flex justify-content-between align-items-center mt-3">
