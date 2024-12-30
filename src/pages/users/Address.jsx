@@ -89,8 +89,8 @@ const Address = () => {
         e.preventDefault();
         try {
             // Gửi dữ liệu đến API
-            const data = await createAddress(formData);
-            const newAddress = data.newAddress[0];
+            const response = await createAddress(formData);
+            const newAddress = response.newAddress[0];
             // Thêm địa chỉ mới vào danh sách địa chỉ
             setAddresses((prevAddresses) => [
                 ...prevAddresses,
@@ -98,10 +98,11 @@ const Address = () => {
                     id: newAddress.id,
                     name: newAddress.name,
                     phone: newAddress.phone,
-                    address: `${newAddress.specific_address}, ${wards.find(w => w.id === parseInt(newAddress.ward_id))?.name},
-                                ${districts.find(d => d.id === parseInt(newAddress.district_id))?.name},
-                                ${provinces.find(p => p.id === parseInt(newAddress.province_id))?.name}`,
-                    isDefault: newAddress.is_default,
+                    province: newAddress.province,
+                    district: newAddress.district,
+                    ward: newAddress.ward,
+                    specific_address: newAddress.specific_address,
+                    is_default: newAddress.is_default,
                 },
             ]);
 
@@ -141,7 +142,7 @@ const Address = () => {
                             <h5 className="card-title mb-3">
                                 {address.name} <span className="text-muted">{address.phone}</span>
                             </h5>
-                            <p className="card-text mb-2">{`${address.specific_address}, ${address.ward}, ${address.distric}, ${address.province}`}</p>
+                            <p className="card-text mb-2">{`${address.specific_address}, ${address.ward}, ${address.district}, ${address.province}`}</p>
                             {address.is_default && (
                                 <span className="badge bg-danger">Mặc định</span>
                             )}
