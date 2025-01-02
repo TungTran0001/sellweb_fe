@@ -3,12 +3,14 @@ import axios from "axios";
 
 import LayoutUser from "../../components/Layouts/LayoutUser";
 import apiEndpoints from "../../config/apiRouters";
-import { createAddress, getAddresses } from "../../services/addressService";
+import { createAddress, getAddresses, updateAddress } from "../../services/addressService";
 
 const Address = () => {
     const [addresses, setAddresses] = useState([]);
-
     const [showModal, setShowModal] = useState(false);
+    const [editMode, setEditMode] = useState(false); // Xác định chế độ (thêm/cập nhật)
+    const [editingAddress, setEditingAddress] = useState(null); // Địa chỉ đang chỉnh sửa
+
     // State lưu trữ dữ liệu địa lý
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -74,39 +76,8 @@ const Address = () => {
 
     const toggleModal = () => {
         setShowModal(!showModal);
-    }
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === "checkbox" ? checked : value,
-        });
-    };
-
-    // Gửi dữ liệu form
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            // Gửi dữ liệu đến API
-            const response = await createAddress(formData);
-            const newAddress = response.newAddress[0];
-            // Thêm địa chỉ mới vào danh sách địa chỉ
-            setAddresses((prevAddresses) => [
-                ...prevAddresses,
-                {
-                    id: newAddress.id,
-                    name: newAddress.name,
-                    phone: newAddress.phone,
-                    province: newAddress.province,
-                    district: newAddress.district,
-                    ward: newAddress.ward,
-                    specific_address: newAddress.specific_address,
-                    is_default: newAddress.is_default,
-                },
-            ]);
-
-            // Reset form
+        if (!showModal) {
+            setEditMode(false);
             setFormData({
                 name: "",
                 phone: "",
@@ -116,13 +87,92 @@ const Address = () => {
                 specificAddress: "",
                 isDefault: false,
             });
-
-            // Đóng modal
-            setShowModal(false);
-        } catch (error) {
-            console.error("failed to create address: ", error);
-            alert("Đã xảy ra lỗi khi thêm địa chỉ. Vui lòng thử lại!");
         }
+    };
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === "checkbox" ? checked : value,
+        });
+    };
+
+    // Mở modal để chỉnh sửa
+    const handleEdit = (address) => {
+        setEditMode(true);
+        setEditingAddress(address);
+        // Tìm ID tương ứng từ tên đã lưu
+        const province = provinces.find((item) => item.name === address.province);
+        const district = districts.find((item) => item.name === address.district);
+        const ward = wards.find((item) => item.name === address.ward);
+        setFormData({
+            name: address.name,
+            phone: address.phone,
+            provinceId: province ? province.id : "",
+            districtId: district ? district.id : "",
+            wardId: ward ? ward.id : "",
+            specificAddress: address.specific_address,
+            isDefault: address.is_default,
+        });
+        setShowModal(true);
+    }
+
+    // Gửi dữ liệu form
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (editMode) {
+            try {
+                const response = await updateAddress(editingAddress.id, formData);
+                const addressUpdated = response.address[0];
+                // Cập nhật địa chỉ trong danh sách hiển thị
+                setAddresses((prevAddresses) =>
+                    prevAddresses.map((address) =>
+                        address.id === addressUpdated.id ? addressUpdated : address
+                    )
+                );
+                alert(response.message);
+            } catch (error) {
+                console.log("Lỗi cập nhật: ", error);
+                alert("Có lỗi cập nhật địa chỉ. Vui lòng thử lại!");
+            }
+        } else {
+            try {
+                // Gửi dữ liệu đến API
+                const response = await createAddress(formData);
+                const newAddress = response.newAddress[0];
+                // Thêm địa chỉ mới vào danh sách địa chỉ
+                setAddresses((prevAddresses) => [
+                    ...prevAddresses,
+                    {
+                        id: newAddress.id,
+                        name: newAddress.name,
+                        phone: newAddress.phone,
+                        province: newAddress.province,
+                        district: newAddress.district,
+                        ward: newAddress.ward,
+                        specific_address: newAddress.specific_address,
+                        is_default: newAddress.is_default,
+                    },
+                ]);
+                alert(response.message);
+            } catch (error) {
+                console.log("Lỗi thêm: ", error);
+                alert("Có lỗi thêm địa chỉ. Vui lòng thử lại!");
+            }
+        }
+        // Reset form
+        setFormData({
+            name: "",
+            phone: "",
+            provinceId: "",
+            districtId: "",
+            wardId: "",
+            specificAddress: "",
+            isDefault: false,
+        });
+        // Đóng modal
+        setShowModal(false);
     };
 
     return (
@@ -148,7 +198,7 @@ const Address = () => {
                             )}
                             <div className="d-flex justify-content-between align-items-center mt-3">
                                 <div>
-                                    <button className="btn btn-link text-decoration-none">Cập nhập</button>
+                                    <button className="btn btn-link text-decoration-none" onClick={() => handleEdit(address)}>Cập nhập</button>
                                     {!address.is_default && (
                                         <button className="btn btn-link text-decoration-none text-danger">Xóa</button>
                                     )}
@@ -167,7 +217,9 @@ const Address = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title">Địa chỉ mới</h5>
+                                    <h5 className="modal-title">
+                                        {editMode ? "Cập nhật địa chỉ" : "Thêm địa chỉ mới"}
+                                    </h5>
                                     <button className="btn-close" onClick={toggleModal}></button>
                                 </div>
                                 <div className="modal-body">
@@ -282,7 +334,7 @@ const Address = () => {
                                                 checked={formData.isDefault}
                                                 onChange={handleChange}
                                             />
-                                            <label className="form-check-label" htmlFor="defaultAddress">
+                                            <label className="form-check-label" htmlFor="isDefault">
                                                 Đặt làm địa chỉ mặc định
                                             </label>
                                         </div>
@@ -296,6 +348,7 @@ const Address = () => {
                         </div>
                     </div>
                 )}
+
             </div>
         </LayoutUser>
     )

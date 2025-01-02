@@ -40,3 +40,25 @@ export const getAddresses = async () => {
         throw error;
     }
 }
+
+export const updateAddress = async (id, updateData) => {
+    try {
+        const response = await apiFetch(
+            `${apiEndpoints.addresses}/${id}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updateData),
+            }
+        );
+        if (!response.ok) {
+            throw new Error("Error server: ", response.status);
+        }
+        return response.json();
+    } catch (error) {
+        console.error("Error update addresses: ", error);
+        throw error;
+    }
+}
