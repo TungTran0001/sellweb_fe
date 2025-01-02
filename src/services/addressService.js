@@ -62,3 +62,21 @@ export const updateAddress = async (id, updateData) => {
         throw error;
     }
 }
+
+export const deleteAddress = async (id) => {
+    try {
+        const response = await apiFetch(
+            `${apiEndpoints.addresses}/${id}`,
+            {
+                method: "DELETE",
+            }
+        );
+        if (!response.ok) {
+            throw new Error("Error server: ", response.status);
+        }
+        return response.json();
+    } catch (error) {
+        console.error("Error delete address: ", error);
+        throw error;
+    }
+}

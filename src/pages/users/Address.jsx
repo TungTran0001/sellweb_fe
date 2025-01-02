@@ -3,7 +3,7 @@ import axios from "axios";
 
 import LayoutUser from "../../components/Layouts/LayoutUser";
 import apiEndpoints from "../../config/apiRouters";
-import { createAddress, getAddresses, updateAddress } from "../../services/addressService";
+import { createAddress, deleteAddress, getAddresses, updateAddress } from "../../services/addressService";
 
 const Address = () => {
     const [addresses, setAddresses] = useState([]);
@@ -175,6 +175,22 @@ const Address = () => {
         setShowModal(false);
     };
 
+    // Xóa địa chỉ
+    const handleDelete = async (id) => {
+        if (window.confirm("Bạn có chắc chắn muốn xóa địa chỉ này?")) {
+            try {
+                const response = await deleteAddress(id);
+                setAddresses((prevAddresses) =>
+                    prevAddresses.filter((address) => address.id !== id)
+                );
+                alert(response.message);
+            } catch (error) {
+                console.error("Lỗi khi xóa địa chỉ:", error);
+                alert("Không thể xóa địa chỉ. Vui lòng thử lại!");
+            }
+        }
+    }
+
     return (
         <LayoutUser>
             <div className="container mt-4">
@@ -200,7 +216,12 @@ const Address = () => {
                                 <div>
                                     <button className="btn btn-link text-decoration-none" onClick={() => handleEdit(address)}>Cập nhập</button>
                                     {!address.is_default && (
-                                        <button className="btn btn-link text-decoration-none text-danger">Xóa</button>
+                                        <button 
+                                            className="btn btn-link text-decoration-none text-danger"
+                                            onClick={() => handleDelete(address.id)}
+                                        >
+                                            Xóa
+                                        </button>
                                     )}
                                 </div>
                                 {!address.is_default && (
