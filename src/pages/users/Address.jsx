@@ -3,7 +3,7 @@ import axios from "axios";
 
 import LayoutUser from "../../components/Layouts/LayoutUser";
 import apiEndpoints from "../../config/apiRouters";
-import { createAddress, deleteAddress, getAddresses, updateAddress } from "../../services/addressService";
+import { createAddress, deleteAddress, getAddresses, setDefaultAddress, updateAddress } from "../../services/addressService";
 
 const Address = () => {
     const [addresses, setAddresses] = useState([]);
@@ -191,6 +191,25 @@ const Address = () => {
         }
     }
 
+    // Thiết lập địa chỉ mặc định
+    const handleSetDefaultAddress = async (id) => {
+        if (window.confirm("Bạn có chắc chắn muốn đặt địa chỉ này làm mặc định?")) {
+            try {
+                const response = await setDefaultAddress(id);
+                setAddresses((prevAddresses) =>
+                    prevAddresses.map((address) =>
+                        address.id === id
+                            ? { ...address, is_default: 1 }
+                            : { ...address, is_default: 0 }
+                    )
+                );
+                alert(response.message);
+            } catch (error) {
+                console.error('Error setting default address: ', error);
+            }
+        }
+    }
+
     return (
         <LayoutUser>
             <div className="container mt-4">
@@ -225,7 +244,12 @@ const Address = () => {
                                     )}
                                 </div>
                                 {!address.is_default && (
-                                    <button className="btn btn-outline-secondary">Thiết lập mặc định</button>
+                                    <button 
+                                        className="btn btn-outline-secondary"
+                                        onClick={() => handleSetDefaultAddress(address.id)}
+                                    >
+                                        Thiết lập mặc định
+                                    </button>
                                 )}
                             </div>
                         </div>

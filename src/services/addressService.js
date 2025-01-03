@@ -80,3 +80,21 @@ export const deleteAddress = async (id) => {
         throw error;
     }
 }
+
+export const setDefaultAddress = async (id) => {
+    try {
+        const response = await apiFetch(
+            `${apiEndpoints.addresses}/${id}/default`,
+            {
+                method: "PUT"
+            }
+        );
+        if (!response.ok) {
+            throw new Error("Error server: ", response.status);
+        }
+        return response.json();
+    } catch (error) {
+        console.error("Error setting default address: ", error);
+        throw error;
+    }
+}
