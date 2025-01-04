@@ -172,31 +172,20 @@ const HeaderBottom = () => {
                         <p className="px-3 py-2 fw-bold border-bottom">Sản phẩm mới thêm</p>
                         <ul className="list-unstyled m-0 p-0">
                             {/* Item 1 */}
-                            <li className="d-flex align-items-center px-3 py-2 border-bottom hover-bg">
-                                <img
-                                    className="rounded"
-                                    src="/slider1.jpg" 
-                                    alt="img"
-                                    style={{ width: "50px", height: "50px", objectFit: "cover" }} 
-                                />
-                                <div className="ms-3 flex-grow-1">
-                                    <p className="mb-1 text-truncate">Quần lửng nam cao cấp giá rẻ</p>
-                                    <p className="text-danger m-0">68.000đ</p>
-                                </div>
-                            </li>
-                            {/* Item 2 */}
-                            <li className="d-flex align-items-center px-3 py-2 border-bottom hover-bg">
-                                <img
-                                    className="rounded"
-                                    src="/slider1.jpg" 
-                                    alt="img"
-                                    style={{ width: "50px", height: "50px", objectFit: "cover" }} 
-                                />
-                                <div className="ms-3 flex-grow-1">
-                                    <p className="mb-1 text-truncate">Quần lửng nam cao cấp giá rẻ </p>
-                                    <p className="text-danger m-0">68.000đ</p>
-                                </div>
-                            </li>
+                            <Link to="/product-details" className="text-decoration-none text-black">
+                                <li className="d-flex align-items-center px-3 py-2 border-bottom hover-bg">
+                                    <img
+                                        className="rounded"
+                                        src="/slider1.jpg" 
+                                        alt="img"
+                                        style={{ width: "50px", height: "50px", objectFit: "cover" }} 
+                                    />
+                                    <div className="ms-3 flex-grow-1">
+                                        <p className="mb-1 text-truncate">Quần lửng nam cao cấp giá rẻ</p>
+                                        <p className="text-danger m-0">68.000đ</p>
+                                    </div>
+                                </li>
+                            </Link>
                         </ul>
                         <div className="text-center py-2">
                             <button 
