@@ -1,4 +1,4 @@
-import NotificationLink from "../notifications/NotificationLink";
+import NotificationLink from "../Notifications/NotificationLink";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { logoutUser } from "../../services/authService";
@@ -215,7 +215,7 @@ const HeaderBottom = () => {
 
 const Header = () => {
     return (
-        <div className="container-fruit bg-primary">
+        <div className="container-fruit bg-primary fixed-top">
             <div className="container">
                 <HeaderTop />
                 <HeaderBottom />
