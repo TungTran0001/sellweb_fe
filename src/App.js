@@ -5,7 +5,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
-import Order from './pages/Order';
+import Cart from './pages/Cart';
 import Profile from './pages/users/Profile';
 import Purchase from './pages/users/Purchase';
 import { AuthProvider } from './contexts/AuthContext';
@@ -29,9 +29,9 @@ function App() {
               </ProtectedRoute>
               } 
             />
-            <Route path="/orders" element={ 
+            <Route path="/cart" element={ 
               <ProtectedRoute>
-                <Order />
+                <Cart />
               </ProtectedRoute>
               } 
             />
