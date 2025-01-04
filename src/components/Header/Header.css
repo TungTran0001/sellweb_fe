@@ -1,0 +1,35 @@
+/* Hiệu ứng hover vào item */
+.hover-bg:hover {
+    background-color: #f8f9fa; /* Màu nền nhạt khi hover */
+    cursor: pointer;
+}
+
+/* Tam giác nhỏ
+.cart-popup-arrow {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    transform: translateY(-50%) rotate(45deg);
+    width: 15px;
+    height: 15px;
+    background-color: white;
+    border-left: 1px solid #dee2e6;
+    border-top: 1px solid #dee2e6;
+    z-index: 2;
+} */
+
+.cart-popup {
+    width: 350px;
+    z-index: 1050;
+}
+
+/* Tam giác nhỏ */
+.cart-popup::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: 25px; /* Điều chỉnh để phù hợp với vị trí */
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+  }

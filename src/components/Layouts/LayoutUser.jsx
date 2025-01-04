@@ -1,4 +1,4 @@
-import Header from "../Header";
+import Header from "../Header/Header";
 import Navbar from "../Navbar/Navbar";
 
 const LayoutUser = ({ children }) => {
