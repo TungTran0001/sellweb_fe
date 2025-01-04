@@ -4,20 +4,6 @@
     cursor: pointer;
 }
 
-/* Tam giác nhỏ
-.cart-popup-arrow {
-    position: absolute;
-    top: 0;
-    right: 20px;
-    transform: translateY(-50%) rotate(45deg);
-    width: 15px;
-    height: 15px;
-    background-color: white;
-    border-left: 1px solid #dee2e6;
-    border-top: 1px solid #dee2e6;
-    z-index: 2;
-} */
-
 .cart-popup {
     width: 350px;
     z-index: 1050;
