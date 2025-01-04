@@ -1,12 +1,24 @@
-import Header from "../components/Header";
+import Carousel from "../components/Carousel/Carousel";
+import LayoutDefault from "../components/Layouts/LayoutDefault";
 
 const Home = () => {
     return (
-        <div className="container-fruit">
-            <div className="fixed-top">
-                <Header />
+        <LayoutDefault>
+            {/* Carousel */}
+            <div className="mb-4 border">
+                <Carousel />
             </div>
-        </div>
+
+            {/* Categories */}
+            <div className="mb-4 border">
+                Categories
+            </div>
+
+            {/* Gợi ý hôm nay */}
+            <div className="border">
+                Gợi ý hôm nay 
+            </div>
+        </LayoutDefault>
     )
 }
 
