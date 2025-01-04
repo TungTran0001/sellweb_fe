@@ -1,12 +1,12 @@
-import Carousel from "../components/Carousel/Carousel";
+import Banner from "../components/Banner/Banner";
 import LayoutDefault from "../components/Layouts/LayoutDefault";
 
 const Home = () => {
     return (
         <LayoutDefault>
-            {/* Carousel */}
+            {/* Banner */}
             <div className="mb-4 border">
-                <Carousel />
+                <Banner />
             </div>
 
             {/* Categories */}

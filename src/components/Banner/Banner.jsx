@@ -1,4 +1,4 @@
-const Carousel = () => {
+const Banner = () => {
     return (
         <div id="carouselExampleIndicators" className="carousel slide">
             <div className="carousel-indicators">
@@ -29,4 +29,4 @@ const Carousel = () => {
     )
 }
 
-export default Carousel;
+export default Banner;
