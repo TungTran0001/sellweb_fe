@@ -5,6 +5,7 @@ const apiEndpoints = {
     provinces: `${baseUrl}/locations/provinces`,
     districts: (provinceId) => `${baseUrl}/locations/districts/${provinceId}`,
     wards: (districtId) => `${baseUrl}/locations/wards/${districtId}`,
+    getHomePageBanners: `${baseUrl}/banners/homepage`,
 };
 
 export default apiEndpoints;

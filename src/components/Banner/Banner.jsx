@@ -1,29 +1,39 @@
-const Banner = () => {
+import { Link } from "react-router-dom";
+
+const Banner = ({ banners }) => {
     return (
         <div id="carouselExampleIndicators" className="carousel slide">
             <div className="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" aria-label="Slide 1" class="active" aria-current="true" ></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                {banners.map((_, index) => (
+                    <button
+                        key={index} 
+                        type="button" 
+                        data-bs-target="#carouselExampleIndicators" 
+                        data-bs-slide-to={index}
+                        aria-label={`Slide ${index + 1}`}
+                        className={index === 0 ? 'active' : ''}
+                        aria-current={index === 0 ? 'true' : undefined } 
+                    ></button>
+                ))}
             </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="/slider1.jpg" class="d-block w-100" alt="..." />
-                </div>
-                <div class="carousel-item">
-                    <img src="/slider2.jpg" class="d-block w-100" alt="..." />
-                </div>
-                <div class="carousel-item">
-                    <img src="/slider3.jpg" class="d-block w-100" alt="..." />
-                </div>
+            <div className="carousel-inner">
+                {banners.map((banner, index) => (
+                    <Link to={banner.redirect_url} key={index}>
+                        <div 
+                            className={`carousel-item ${index === 0 ? 'active': ''}`}
+                        >
+                            <img src={`http://localhost:3001${banner.image_url}`} class="d-block w-100" alt="..." />
+                        </div>
+                    </Link>
+                ))}
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+            <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Next</span>
             </button>
         </div>
     )
