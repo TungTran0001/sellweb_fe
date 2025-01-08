@@ -9,7 +9,7 @@ const LayoutDefault = ({ children }) => {
             <Header />
 
             {/* Nội dung chính */}
-            <div className="container mb-4 border" style={{ marginTop: "130px"}}>
+            <div className="container mb-4" style={{ marginTop: "130px"}}>
                 {children}
             </div>
 

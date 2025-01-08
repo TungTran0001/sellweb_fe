@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 
-const CategoryCard = () => {
+
+const CategoryCard = ({ categoryData }) => {
     return (
-        <Link to="/" className="link-underline-light">
-            <div className="card" style={{width: "10rem", flexShrink: 0,}}>
-                <img src="/slider1.jpg" alt="img" className="card-img-top" />
-                <div className="card-body">
-                    <p className="card-text">Thời trang nam</p>
+        <Link to={categoryData.id_query} className="link-underline-light">
+            <div class="card" style={{width: "10rem", height: "15rem"}}>
+                <img src={`http://localhost:3001${categoryData.image_url}`} className="card-img-top h-75" alt="..."/>
+                <div class="card-body">
+                    <h6>{categoryData.name}</h6>
                 </div>
             </div>
         </Link>

@@ -6,6 +6,7 @@ const apiEndpoints = {
     districts: (provinceId) => `${baseUrl}/locations/districts/${provinceId}`,
     wards: (districtId) => `${baseUrl}/locations/wards/${districtId}`,
     getHomePageBanners: `${baseUrl}/banners/homepage`,
+    categories: `${baseUrl}/categories`,
 };
 
 export default apiEndpoints;
