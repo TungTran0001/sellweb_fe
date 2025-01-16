@@ -1,6 +1,7 @@
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+
 import { FaStar } from "react-icons/fa";
+import Header from "../components/Header/Header";
+import Footer from "../components/Footer/Footer";
 const ProductDetails = () => {
     return (
         <div className="container-fluid overflow-auto">

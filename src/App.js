@@ -15,6 +15,7 @@ import GuestRoute from './components/GuestRoute';
 import Address from './pages/users/Address';
 import ChangePassword from './pages/users/ChangePassword';
 import Notification from './pages/users/Notification';
+import ProductDetails from './pages/ProductDetails';
 
 function App() {
   return (
@@ -62,6 +63,12 @@ function App() {
             <Route path="/user/notifications/order" element={ 
               <ProtectedRoute>
                 <Notification />
+              </ProtectedRoute>
+              } 
+            />
+            <Route path="/product/:id" element={ 
+              <ProtectedRoute>
+                <ProductDetails/>
               </ProtectedRoute>
               } 
             />
