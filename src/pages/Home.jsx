@@ -4,13 +4,17 @@ import LayoutDefault from "../components/Layouts/LayoutDefault";
 import { getHomePageBanners } from "../services/bannerService";
 import CategoryCard from "../components/Categories/CategoryCard";
 import { getNameImageIdQueryCategory } from "../services/categoryService";
+import ProductList from "../components/Products/ProductList";
+import { getProductCardInfoProducts } from "../services/productService";
 
 const Home = () => {
     const [banners, setBanners] = useState([]); // Trạng thái lưu danh sách banner
     const [categories, setCategories] = useState([]); // Trạng thái lưu danh sách categories
+    const [products, setProducts] = useState([]); // Trạng thái lưu danh sách products
 
     const [loadingBanners, setLoadingBanners] = useState(true); // Trạng thái tải banner
     const [loadingCategories, setLoadingCategories] = useState(true); // Trạng thái tải categories
+    const [loadingProducts, setLoadingProducts] = useState(true); // Trạng thái tải products
 
     // Gọi API lấy danh sách banner
     useEffect(
@@ -50,6 +54,25 @@ const Home = () => {
         []
     );
 
+    // Gọi API lấy danh sách products
+    useEffect(
+        () => {
+            const fetchProducts = async () => {
+                try {
+                    setLoadingProducts(true) // Bắt đầu tải
+                    const response = await getProductCardInfoProducts();
+                    setProducts(response.products);  // Lưu dữ liệu categories vào state
+                } catch (error) {
+                    console.error("Error fetching products: ", error);
+                } finally {
+                    setLoadingProducts(false);
+                }
+            }
+            fetchProducts();
+        },
+        []
+    );
+
     return (
         <LayoutDefault>
             {/* Banner */}
@@ -63,10 +86,10 @@ const Home = () => {
 
             {/* Categories */}
             <div className="mb-4 border">
-                <h4>Danh mục sảm phẩm</h4>
-                <div className="d-flex">
+                <h4>Danh mục sản phẩm</h4>
+                <div className="d-flex overflow-x-auto overflow-y-hidden">
                     {loadingCategories ? (
-                        <div>Loading categories...</div> // Hiển thị khi đang tải categories
+                        <div className="text-center">Loading categories...</div> // Hiển thị khi đang tải categories
                     ) : (
                         categories.map((category) => (
                             <CategoryCard
@@ -80,7 +103,12 @@ const Home = () => {
 
             {/* Gợi ý hôm nay */}
             <div className="border">
-                Gợi ý hôm nay 
+                <h4>Gợi ý hôm nay</h4>
+                {loadingProducts ? (
+                    <div>Loading products...</div>
+                ) : (
+                    <ProductList products={products}/>
+                )}
             </div>
         </LayoutDefault>
     )

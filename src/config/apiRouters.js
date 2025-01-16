@@ -7,6 +7,7 @@ const apiEndpoints = {
     wards: (districtId) => `${baseUrl}/locations/wards/${districtId}`,
     getHomePageBanners: `${baseUrl}/banners/homepage`,
     categories: `${baseUrl}/categories`,
+    products: `${baseUrl}/products`,
 };
 
 export default apiEndpoints;
