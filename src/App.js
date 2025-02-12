@@ -66,7 +66,7 @@ function App() {
               </ProtectedRoute>
               } 
             />
-            <Route path="/product/:id" element={ 
+            <Route path="/product/:idQuery" element={ 
               <ProtectedRoute>
                 <ProductDetails/>
               </ProtectedRoute>

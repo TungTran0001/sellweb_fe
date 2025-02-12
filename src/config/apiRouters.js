@@ -8,6 +8,7 @@ const apiEndpoints = {
     getHomePageBanners: `${baseUrl}/banners/homepage`,
     categories: `${baseUrl}/categories`,
     products: `${baseUrl}/products`,
+    getProductDetails: (idQuery) => `${baseUrl}/products/details/${idQuery}`,
 };
 
 export default apiEndpoints;

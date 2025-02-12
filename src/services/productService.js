@@ -18,3 +18,21 @@ export const getProductCardInfoProducts = async () => {
         throw error;
     }
 }
+
+export const getProductDetails = async (idQuery) => {
+    try {
+        const response = await apiFetch(
+            apiEndpoints.getProductDetails(idQuery),
+            {
+                method: "GET",
+            }
+        )
+        if (!response.ok) {
+            throw new Error("Error server 1");
+        }
+        return response.json();
+    } catch (error) {
+        console.log("Error fetching product details at service", error);
+        throw error;
+    }
+}
