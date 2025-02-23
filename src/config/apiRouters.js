@@ -9,6 +9,7 @@ const apiEndpoints = {
     categories: `${baseUrl}/categories`,
     products: `${baseUrl}/products`,
     getProductDetails: (idQuery) => `${baseUrl}/products/details/${idQuery}`,
+    carts: `${baseUrl}/carts`,
 };
 
 export default apiEndpoints;

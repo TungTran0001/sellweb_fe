@@ -4,7 +4,7 @@ import Footer from "../Footer/Footer";
 
 const LayoutDefault = ({ children }) => {
     return (
-        <div className="d-flex flex-column vh-100">
+        <div>
             {/* Header cố định */}
             <Header />
 

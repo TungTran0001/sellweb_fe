@@ -1,8 +1,10 @@
+import styles from "../styles/productDetails.module.css";
 import { FaStar } from "react-icons/fa";
 import LayoutDefault from "../components/Layouts/LayoutDefault";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProductDetails } from "../services/productService";
+import { addToCart } from "../services/cartService";
 const ProductDetails = () => {
 
     const { idQuery } = useParams();
@@ -14,6 +16,7 @@ const ProductDetails = () => {
     const [selectedColor, setSelectedColor] = useState("");
     const [selectedColorImage, setSelectedColorImage] = useState("");
     const [selectedQuantity, setSelectedQuantity] = useState(1); // Số lượng mặc định là 1
+    const [cartMessage, setCartMessage] = useState("");  // Thông báo giỏ hàng
 
     const handleSelectColor = (color) => {
         setSelectedColor(color.color_name);
@@ -27,6 +30,31 @@ const ProductDetails = () => {
     const handleDecreaseQuantity = () => {
         setSelectedQuantity((prev) => (prev > 1 ? prev - 1 : 1));
     };
+
+    const handleAddToCart = async () => {
+        if (selectedSize === "" || selectedColor === "") {
+            alert("Vui lòng chọn màu sắc và kích thước");
+            return;
+        }
+        const cartItemData = {
+            product_id: productDetailsInfo.product.id,
+            color_id: productDetailsInfo.colors.find((color) => color.color_name === selectedColor).id,
+            size_id: productDetailsInfo.sizes.find((size) => size.size_name === selectedSize).id,
+            quantity: selectedQuantity,
+            price: parseFloat(productDetailsInfo.product.discount_price),
+            total_price: selectedQuantity * parseFloat(productDetailsInfo.product.discount_price),
+        };
+        try {
+            const response = await addToCart(cartItemData);
+            setCartMessage(response.message);
+            setTimeout(() => {
+                setCartMessage("");
+            }, 3000);
+        } catch (error) {
+            console.error("Lỗi khi gửi request thêm vào giỏ hàng:", error);
+        }
+        
+    }
 
     useEffect(
         () => {
@@ -52,7 +80,7 @@ const ProductDetails = () => {
 
     return (
         <LayoutDefault>
-            <div className="container border" style={{paddingTop: "130px"}}>
+            <div className="border">
                 {loadingProductDetails ? (
                     <div>Loading productDetails ...</div>
                 ) : (
@@ -106,21 +134,6 @@ const ProductDetails = () => {
                                 <span className="bg-primary text-light">{Math.round(
                                     (productDetailsInfo.product.price-productDetailsInfo.product.discount_price)/productDetailsInfo.product.price * 100
                                 )}% giảm</span>
-                            </div>
-
-                            <div className="row p-4 text-start">
-                                <span className="col-3">Vận chuyển</span>
-                                <span className="col-9">
-                                    {productDetailsInfo?.addresses?.length > 0 ? (
-                                        <select className="form-select">
-                                            {productDetailsInfo.addresses.map((address, index) => (
-                                                <option key={index} value={address}>{`${address.specific_address}, ${address.ward}, ${address.district}, ${address.province}`}</option>
-                                            ))}
-                                        </select>
-                                    ) : (
-                                        <span>Không có thông tin</span>
-                                    )}
-                                </span>
                             </div>
                             <div className="row p-4 text-start">
                                 <span className="col-3">Màu sắc</span>
@@ -176,10 +189,15 @@ const ProductDetails = () => {
                                 </div>
                             </div>
                             <div className="p-4 text-start">
-                                <button className="me-3 p-2 rounded-1 text-primary border-primary">Thêm vào giỏ hàng</button>
-                                <button className="p-2 rounded-1 bg-primary border-0 text-white">Mua Ngay</button>
+                                <button type="button" onClick={handleAddToCart} class="btn btn-outline-primary me-4">Thêm vào giỏ hàng</button>
+                                <button type="button" class="btn btn-primary">Mua ngay</button>
                             </div>
                         </div>
+                        {cartMessage && (
+                            <div className={styles.alert}>
+                                {cartMessage}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
